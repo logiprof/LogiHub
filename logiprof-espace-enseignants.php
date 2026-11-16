@@ -2,7 +2,7 @@
 /**
  * Plugin Name: LogiHub
  * Description: Les ressources des élèves en tuiles : rubriques, liens, pages et outils intégrés, gérés par l'administration. Présentation LogiOne by LogiProf.
- * Version: 0.10.2
+ * Version: 0.11.0
  * Author: LogiProf
  * Text Domain: logiprof-espace-enseignants
  * Requires at least: 5.8
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'LOGIHUB_VERSION', '0.10.2' );
+define( 'LOGIHUB_VERSION', '0.11.0' );
 define( 'LOGIHUB_FILE', __FILE__ );
 
 // 0.10.2 : mises à jour depuis GitHub (dépôt public logiprof/LogiHub), comme LogiOne.
@@ -456,6 +456,15 @@ final class Logiprof_Espace_Enseignants {
 									<label class="lpee-check"><input type="checkbox" name="lpee_settings[show_search]" value="1" <?php checked( $settings['show_search'], '1' ); ?>><span><?php esc_html_e( 'Recherche dans le bandeau', 'logiprof-espace-enseignants' ); ?></span></label>
 									<label class="lpee-check"><input type="checkbox" name="lpee_settings[show_greeting]" value="1" <?php checked( $settings['show_greeting'], '1' ); ?>><span><?php esc_html_e( 'Saluer l’élève par son prénom', 'logiprof-espace-enseignants' ); ?></span></label>
 									<label class="lpee-check"><input type="checkbox" name="lpee_settings[show_art]" value="1" <?php checked( $settings['show_art'], '1' ); ?>><span><?php esc_html_e( 'Illustration (Noki, la mascotte LogiProf)', 'logiprof-espace-enseignants' ); ?></span></label>
+									<label class="lpee-field lpee-field-wide lpee-width-field">
+										<span><?php esc_html_e( 'Largeur de la page', 'logiprof-espace-enseignants' ); ?></span>
+										<select name="lpee_settings[page_width]">
+											<?php foreach ( self::page_width_choices() as $value => $label ) : ?>
+												<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $settings['page_width'], $value ); ?>><?php echo esc_html( $label ); ?></option>
+											<?php endforeach; ?>
+										</select>
+										<span class="description"><?php esc_html_e( 'Bandeau et tuiles alignés sur la même largeur, comme sur l’accueil LogiOne.', 'logiprof-espace-enseignants' ); ?></span>
+									</label>
 									<div class="lpee-field lpee-field-wide lpee-color-field lpee-hero-color-field">
 										<span><?php esc_html_e( 'Couleur de l’en-tête', 'logiprof-espace-enseignants' ); ?></span>
 										<input type="hidden" id="lpee-hero-color" name="lpee_settings[hero_color]" value="<?php echo esc_attr( $settings['hero_color'] ); ?>">
@@ -1274,6 +1283,19 @@ final class Logiprof_Espace_Enseignants {
 		return (string) $dom->saveXML( $dom->documentElement );
 	}
 
+	/** 0.11.0 : largeur de la page en tuiles, comme l'accueil LogiOne (« Toute la largeur de l'écran » ou centrée). */
+	public static function page_width_choices() {
+		return array(
+			'large'    => __( 'Toute la largeur de l’écran (comme LogiOne)', 'logiprof-espace-enseignants' ),
+			'standard' => __( 'Standard (centrée)', 'logiprof-espace-enseignants' ),
+		);
+	}
+
+	private static function width_class( $settings ) {
+		$width = isset( $settings['page_width'] ) && 'standard' === $settings['page_width'] ? 'standard' : 'large';
+		return ' lph-width-' . $width;
+	}
+
 	public static function tile_size_choices() {
 		return array(
 			'normal' => __( 'Normale', 'logiprof-espace-enseignants' ),
@@ -1327,7 +1349,7 @@ final class Logiprof_Espace_Enseignants {
 		$user  = wp_get_current_user();
 		$first = trim( (string) $user->first_name ) !== '' ? (string) $user->first_name : (string) $user->display_name;
 
-		$html  = sprintf( '<div id="%s" class="lpee-root lph lpee-theme-tiles" data-lph data-lph-menu="%s">', esc_attr( $instance_id ), esc_attr( $menu_id ) );
+		$html  = sprintf( '<div id="%s" class="lpee-root lph lpee-theme-tiles%s" data-lph data-lph-menu="%s">', esc_attr( $instance_id ), esc_attr( self::width_class( $settings ) ), esc_attr( $menu_id ) );
 		$html .= self::hero_open( $settings );
 		$html .= '<div class="lph-hero-main' . ( '1' === $settings['show_art'] ? '' : ' no-art' ) . '"><div class="lph-hero-text">';
 		$html .= '1' === $settings['show_greeting'] && '' !== $first ? '<p class="lph-hello">' . esc_html( sprintf( __( 'Bonjour %s', 'logiprof-espace-enseignants' ), $first ) ) . '</p>' : '';
@@ -1369,7 +1391,7 @@ final class Logiprof_Espace_Enseignants {
 			array_unshift( $trail, $node );
 		}
 
-		$html  = sprintf( '<div id="%s" class="lpee-root lph lpee-theme-tiles is-reading" data-lph data-lph-menu="%s">', esc_attr( $instance_id ), esc_attr( $menu_id ) );
+		$html  = sprintf( '<div id="%s" class="lpee-root lph lpee-theme-tiles is-reading%s" data-lph data-lph-menu="%s">', esc_attr( $instance_id ), esc_attr( self::width_class( $ctx['settings'] ) ), esc_attr( $menu_id ) );
 		$html .= self::hero_open( $ctx['settings'] );
 		$html .= '<div class="lph-bar"><a class="lph-back" href="' . esc_url( $back ) . '"><span class="dashicons dashicons-arrow-left-alt2" aria-hidden="true"></span>' . esc_html__( 'Retour', 'logiprof-espace-enseignants' ) . '</a>';
 		$html .= '<nav class="lph-crumbs" aria-label="' . esc_attr__( 'Vous êtes ici', 'logiprof-espace-enseignants' ) . '"><a href="' . esc_url( $home ) . '">' . esc_html( $title ) . '</a>';
@@ -2377,6 +2399,7 @@ final class Logiprof_Espace_Enseignants {
 			'show_greeting'        => isset( $raw['show_greeting'] ) ? ( ! empty( $raw['show_greeting'] ) && '0' !== (string) $raw['show_greeting'] ? '1' : '0' ) : $defaults['show_greeting'],
 			'tile_palette'         => self::sanitize_palette( isset( $raw['tile_palette'] ) ? $raw['tile_palette'] : null ),
 			'hero_color'           => isset( $raw['hero_color'] ) && sanitize_hex_color( (string) $raw['hero_color'] ) ? sanitize_hex_color( (string) $raw['hero_color'] ) : $defaults['hero_color'],
+			'page_width'           => isset( $raw['page_width'] ) && 'standard' === $raw['page_width'] ? 'standard' : 'large',
 			'show_art'             => isset( $raw['show_art'] ) ? ( ! empty( $raw['show_art'] ) && '0' !== (string) $raw['show_art'] ? '1' : '0' ) : $defaults['show_art'],
 			'block_title'          => isset( $raw['block_title'] ) ? sanitize_text_field( $raw['block_title'] ) : $defaults['block_title'],
 			'show_title'           => ! empty( $raw['show_title'] ) ? '1' : '0',
@@ -2550,6 +2573,7 @@ final class Logiprof_Espace_Enseignants {
 		$settings['theme'] = self::sanitize_theme( $settings['theme'] );
 		$settings['tile_palette'] = self::sanitize_palette( $settings['tile_palette'] );
 		$settings['hero_color']   = sanitize_hex_color( (string) $settings['hero_color'] ) ? sanitize_hex_color( (string) $settings['hero_color'] ) : self::DEFAULT_HERO;
+		$settings['page_width'] = 'standard' === $settings['page_width'] ? 'standard' : 'large';
 		foreach ( array( 'show_search', 'show_greeting', 'show_art' ) as $flag ) {
 			$settings[ $flag ] = ! empty( $settings[ $flag ] ) ? '1' : '0';
 		}
@@ -2647,6 +2671,7 @@ final class Logiprof_Espace_Enseignants {
 			'show_search'   => '1',
 			'show_greeting' => '1',
 			'show_art'      => '1',
+			'page_width'    => 'large',
 			'hero_color'    => self::DEFAULT_HERO,
 			'tile_palette'  => array_values( self::tile_presets() ),
 			'block_title'   => 'Mes ressources',

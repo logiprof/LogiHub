@@ -702,3 +702,11 @@ a.lph-link:hover, summary.lph-link:hover { background: var(--mint); transform: t
 .lph-panel .logieval-secure.les-teacher.les-app-shell {
 	position: static !important; left: auto !important; transform: none !important;
 	width: 100% !important; max-width: 100% !important; margin-left: 0 !important; margin-right: 0 !important; }
+
+/* 0.11.0 : « Toute la largeur de l'écran », comme l'accueil LogiOne : bandeau et tuiles alignés sur la même largeur. */
+.lph.lph-width-large .lph-hero > *,
+.lph.lph-width-large .lph-bar,
+.lph.lph-width-large .lph-body { max-width: min(1760px, calc(100vw - 32px)); }
+.lph.lph-width-large .lph-lead { max-width: 110ch; }
+/* Les tuiles remplissent la rangée (pas de colonnes vides à droite sur un grand écran). */
+.lph.lph-width-large .lph-grid { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }

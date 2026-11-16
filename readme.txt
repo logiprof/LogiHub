@@ -3,7 +3,7 @@ Contributors: logiprof
 Tags: shortcode, accordion, students, navigation
 Requires at least: 5.8
 Requires PHP: 7.4
-Stable tag: 0.10.2
+Stable tag: 0.11.0
 License: GPLv2 or later
 
 Les ressources des élèves : menus de rubriques, liens vers vos pages et outils intégrés, gérés par l’administration. Présentation LogiOne by LogiProf.
@@ -59,6 +59,11 @@ Par défaut, les utilisateurs connectés voient le menu. Un visiteur non connect
 LogiHub se met à jour comme une extension WordPress ordinaire depuis GitHub (dépôt public logiprof/LogiHub) : quand une version est publiée, WordPress affiche « Une nouvelle version est disponible » dans Extensions, et le lien « Activer les mises à jour auto » fonctionne. Seuls les fichiers de l'extension sont remplacés : menus, tuiles et réglages ne sont pas touchés. Écran LogiHub › Mises à jour : version installée, dernière version publiée, bouton « Vérifier maintenant ».
 
 == Changelog ==
+
+= 0.11.0 =
+* Même largeur que LogiOne : nouveau réglage « Largeur de la page » (Apparence › Présentation en tuiles). « Toute la largeur de l'écran (comme LogiOne) » est le choix par défaut ; « Standard (centrée) » garde l'ancienne présentation.
+* Le bandeau et les tuiles s'alignent sur la même largeur que l'accueil LogiOne, le texte d'accueil s'étale sur moins de lignes, et les tuiles remplissent toute la rangée.
+* Comprend toutes les nouveautés de la 0.10.2.
 
 = 0.10.2 =
 * Mises à jour automatiques depuis GitHub (dépôt logiprof/LogiHub), avec l'écran LogiHub › Mises à jour. Aucune clé n'est nécessaire (dépôt public).

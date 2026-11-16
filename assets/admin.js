@@ -61,6 +61,7 @@
 			show_search: toBool(raw.show_search !== undefined ? raw.show_search : '1') ? '1' : '0',
 			show_greeting: toBool(raw.show_greeting !== undefined ? raw.show_greeting : '1') ? '1' : '0',
 			show_art: toBool(raw.show_art !== undefined ? raw.show_art : '1') ? '1' : '0',
+			page_width: raw.page_width === 'standard' ? 'standard' : 'large',
 			hero_color: /^#[0-9a-fA-F]{6}$/.test(String(raw.hero_color || '')) ? String(raw.hero_color) : '#313a45',
 			tile_palette: (Array.isArray(raw.tile_palette) ? raw.tile_palette : []).filter(function (c) { return /^#[0-9a-fA-F]{6}$/.test(String(c)); }).slice(0, 8),
 			block_title: String(raw.block_title !== undefined ? raw.block_title : 'Mes ressources'),
@@ -528,6 +529,7 @@
 			$('[name="lpee_settings[' + key + ']"]').prop('checked', normalized[key] === '1');
 		});
 		$('#lpee-hero-color').val(normalized.hero_color);
+		$('[name="lpee_settings[page_width]"]').val(normalized.page_width);
 		$('[name="lpee_settings[block_title]"]').val(normalized.block_title);
 		$('[name="lpee_settings[show_title]"]').prop('checked', normalized.show_title === '1');
 		$('[name="lpee_settings[primary_color]"]').val(normalized.primary_color);
@@ -1202,6 +1204,7 @@
 			show_search: $('[name="lpee_settings[show_search]"]').prop('checked') ? '1' : '0',
 			show_greeting: $('[name="lpee_settings[show_greeting]"]').prop('checked') ? '1' : '0',
 			show_art: $('[name="lpee_settings[show_art]"]').prop('checked') ? '1' : '0',
+			page_width: $('[name="lpee_settings[page_width]"]').val() === 'standard' ? 'standard' : 'large',
 			hero_color: /^#[0-9a-fA-F]{6}$/.test(String($('#lpee-hero-color').val() || '')) ? String($('#lpee-hero-color').val()) : '#313a45',
 			tile_palette: $('[name="lpee_settings[tile_palette][]"]').map(function () { return String($(this).val() || ''); }).get(),
 			block_title: $('[name="lpee_settings[block_title]"]').val() || '',
