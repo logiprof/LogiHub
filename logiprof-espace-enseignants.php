@@ -2,19 +2,27 @@
 /**
  * Plugin Name: LogiHub
  * Description: Les ressources des élèves en tuiles : rubriques, liens, pages et outils intégrés, gérés par l'administration. Présentation LogiOne by LogiProf.
- * Version: 0.10.1
+ * Version: 0.10.2
  * Author: LogiProf
  * Text Domain: logiprof-espace-enseignants
  * Requires at least: 5.8
  * Requires PHP: 7.4
+ * Update URI: https://github.com/logiprof/LogiHub
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+define( 'LOGIHUB_VERSION', '0.10.2' );
+define( 'LOGIHUB_FILE', __FILE__ );
+
+// 0.10.2 : mises à jour depuis GitHub (dépôt public logiprof/LogiHub), comme LogiOne.
+require_once __DIR__ . '/includes/class-logihub-updater.php';
+LogiHub_Updater::boot();
+
 final class Logiprof_Espace_Enseignants {
-	const VERSION         = '0.10.1';
+	const VERSION         = LOGIHUB_VERSION;
 	const OPTION_VERSION  = 'logihub_version';
 	const EDITOR_SHORTCODE = 'logihub_editeur';
 	const SLUG            = 'logiprof-espace-enseignants';

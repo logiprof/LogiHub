@@ -3,7 +3,7 @@ Contributors: logiprof
 Tags: shortcode, accordion, students, navigation
 Requires at least: 5.8
 Requires PHP: 7.4
-Stable tag: 0.10.1
+Stable tag: 0.10.2
 License: GPLv2 or later
 
 Les ressources des élèves : menus de rubriques, liens vers vos pages et outils intégrés, gérés par l’administration. Présentation LogiOne by LogiProf.
@@ -54,7 +54,19 @@ La structure initiale est créée uniquement lors de la première installation. 
 
 Par défaut, les utilisateurs connectés voient le menu. Un visiteur non connecté ou non autorisé ne reçoit pas les liens dans le contenu de la page.
 
+== Mises à jour ==
+
+LogiHub se met à jour comme une extension WordPress ordinaire depuis GitHub (dépôt public logiprof/LogiHub) : quand une version est publiée, WordPress affiche « Une nouvelle version est disponible » dans Extensions, et le lien « Activer les mises à jour auto » fonctionne. Seuls les fichiers de l'extension sont remplacés : menus, tuiles et réglages ne sont pas touchés. Écran LogiHub › Mises à jour : version installée, dernière version publiée, bouton « Vérifier maintenant ».
+
 == Changelog ==
+
+= 0.10.2 =
+* Mises à jour automatiques depuis GitHub (dépôt logiprof/LogiHub), avec l'écran LogiHub › Mises à jour. Aucune clé n'est nécessaire (dépôt public).
+* Le contenu ouvert sous une tuile occupe toute la largeur de l'écran, comme dans LogiOne. À côté d'une grande tuile, il se place sous la rangée, et la page défile pour montrer le début du contenu.
+* Les outils pleine page placés dans une tuile (LogiPlanning, LogiEval, LogiLive, LogiExam…) restent dans le cadre du contenu ouvert : plus de partie coupée à gauche ni à droite.
+* Éditeur dans une page : texte blanc lisible sur les boutons principaux.
+* Supprimer l'extension ne supprime plus les menus, tuiles et réglages : ils sont conservés pour une réinstallation.
+
 
 = 0.10.1 =
 * Le contenu d'une tuile s'ouvre juste sous la tuile choisie (et non plus sous toute la rangée), et la page se place pour montrer la tuile et le début de son contenu. Les grandes tuiles voisines gardent leur hauteur. Le placement suit la largeur de l'écran.

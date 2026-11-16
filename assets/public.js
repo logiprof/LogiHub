@@ -292,7 +292,9 @@
 		var panelTop = panel ? panel.getBoundingClientRect().top : top;
 		// La tuile et le début de son contenu doivent être visibles ensemble.
 		if (top < 0 || top > window.innerHeight * 0.45 || panelTop > window.innerHeight * 0.7) {
-			window.scrollTo({ top: Math.max(0, window.pageYOffset + top - 16), behavior: reduced ? 'auto' : 'smooth' });
+			// Contenu placé loin sous la tuile (sous une grande tuile voisine) : on montre le début du contenu.
+			var tileBottom = tile.getBoundingClientRect().bottom; var target = panelTop - top + 16 <= window.innerHeight * 0.6 ? top - 16 : (panelTop - tileBottom < window.innerHeight * 0.55 ? panelTop - window.innerHeight * 0.65 : panelTop - window.innerHeight * 0.25);
+			window.scrollTo({ top: Math.max(0, window.pageYOffset + target), behavior: reduced ? 'auto' : 'smooth' });
 		}
 	}
 
@@ -321,13 +323,22 @@
 		var t = tile.getBoundingClientRect();
 		var bottom = t.bottom - g.top - (parseFloat(cs.paddingTop) || 0) - (parseFloat(cs.borderTopWidth) || 0);
 		var left = t.left - g.left - (parseFloat(cs.paddingLeft) || 0) - (parseFloat(cs.borderLeftWidth) || 0);
+		// Toute la largeur : le contenu se place à la première ligne sous la tuile qu'aucune autre tuile ne traverse
+		// (une grande tuile voisine garde ainsi sa hauteur ; le contenu se place sous elle).
+		var others = Array.prototype.filter.call(grid.children, function (el) { return el !== panel && !el.hidden && !el.matches('.lpp-panel, .lph-panel'); }).map(function (el) {
+			var r = el.getBoundingClientRect();
+			return [r.top - g.top, r.bottom - g.top];
+		});
 		var line = rows.length + 1;
 		var y = 0;
 		for (var i = 0; i < rows.length; i++) {
 			y += rows[i];
 			if (bottom <= y + 2) {
-				line = i + 2;
-				break;
+				var edge = y + (parseFloat(cs.paddingTop) || 0) + (parseFloat(cs.borderTopWidth) || 0);
+				if (!others.some(function (r) { return r[0] < edge - 2 && r[1] > edge + 2; })) {
+					line = i + 2;
+					break;
+				}
 			}
 			y += rowGap;
 		}
@@ -340,10 +351,28 @@
 			}
 			x += cols[j] + colGap;
 		}
-		// Au moins deux colonnes de large quand la grille le permet, pour que le contenu reste lisible.
-		col = cols.length >= 2 ? Math.min(col, cols.length - 1) : 1;
 		panel.style.gridRow = String(line);
-		panel.style.gridColumn = col + ' / -1';
+		panel.style.gridColumn = '1 / -1';
+		fullBleed(grid, panel);
+	}
+
+	/* Le contenu ouvert occupe toute la largeur de l'écran (LogiOne 1.24.8) : il déborde de la colonne du thème
+	   par des marges négatives calculées (largeur visible sans la barre de défilement). Les outils « pleine page »
+	   comme LogiPlanning s'affichent ainsi en entier, sans partie coupée à gauche ou à droite. */
+	function fullBleed(grid, panel) {
+		panel.style.marginLeft = '';
+		panel.style.marginRight = '';
+		var cs = window.getComputedStyle(grid);
+		var g = grid.getBoundingClientRect();
+		var vw = document.documentElement.clientWidth;
+		var left = g.left + (parseFloat(cs.paddingLeft) || 0) + (parseFloat(cs.borderLeftWidth) || 0);
+		var right = vw - (g.right - (parseFloat(cs.paddingRight) || 0) - (parseFloat(cs.borderRightWidth) || 0));
+		if (left < 0 || right < 0 || vw < 200) {
+			return;
+		}
+		panel.style.marginLeft = (-left) + 'px';
+		panel.style.marginRight = (-right) + 'px';
+		panel.classList.add('is-fullbleed');
 	}
 
 	function unpinTiles(root) {

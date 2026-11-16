@@ -657,3 +657,7 @@
 
 .lpee-text-fields .lpee-rich { min-height: 180px; }
 .lpee-text-fields { margin-top: 4px; }
+
+/* 0.10.2 : texte blanc lisible sur les boutons principaux de l'éditeur dans une page (thèmes qui forcent la couleur des liens). */
+.lpee-admin-in-page .button-primary, .lpee-admin-in-page .button-primary .dashicons { color: #fff !important; }
+.lpee-admin-in-page .button-primary { padding: 6px 16px !important; }
